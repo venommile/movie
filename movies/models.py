@@ -1,5 +1,7 @@
 from django.db import models
 from datetime import date
+from django.urls import reverse
+
 class Category(models.Model):
     """Категории  фильмов"""
     name = models.CharField("Категория", max_length=150)
@@ -63,6 +65,8 @@ class Movie(models.Model):
     )
     url = models.SlugField(max_length=160, unique=True)
     draft = models.BooleanField("Черновик", default=False)
+    def get_absolute_url(self):
+        return reverse("movie_detail", kwargs={"slug": self.url})
 
     def __str__(self):
         return self.title
@@ -76,6 +80,8 @@ class MovieShots(models.Model):
     image = models.ImageField("Изображение", upload_to="movie_shots/")
     movie = models.ForeignKey(Movie, verbose_name="Фильм", on_delete=models.CASCADE)
 
+
+
     def __str__(self):
         return self.title
 
@@ -85,7 +91,7 @@ class MovieShots(models.Model):
 
 class RatingStar(models.Model):
     """Звезда рейтинга"""
-    value =  models.PositiveSmallIntegerField("Значение", default=0)
+    value = models.PositiveSmallIntegerField("Значение", default=0)
 
     def __str__(self):
         return self.value
